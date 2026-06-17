@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preeti's Life Dashboard</title>
+    <style>
+        :root {
+            --primary: #4a154b;
+            --secondary: #e01e5a;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --success: #2eb67d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 { margin: 0; font-size: 2.5rem; }
+        p.subtitle { margin: 0.5rem 0 0 0; opacity: 0.9; font-style: italic; }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        nav button.active, nav button:hover {
+            color: var(--secondary);
+            border-bottom: 3px solid var(--secondary);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .page { display: none; }
+        .page.active { display: block; }
+
+        .progress-section {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .progress-container {
+            background: #eee;
+            border-radius: 20px;
+            height: 25px;
+            width: 100%;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--success), #228b22);
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .timetable-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            transition: background 0.2s;
+        }
+
+        .item-row:last-child { border-bottom: none; }
+        .item-row:hover { background-color: #fdfafd; }
+
+        .time-box {
+            font-weight: bold;
+            color: var(--secondary);
+            min-width: 140px;
+        }
+
+        .task-text { flex-grow: 1; margin-right: 1rem; }
+
+        .checkbox-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .status-btn {
+            border: 2px solid #ccc;
+            background: white;
+            border-radius: 6px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .status-btn.done { background: var(--success); color: white; border-color: var(--success); }
+        .status-btn.fail { background: var(--secondary); color: white; border-color: var(--secondary); }
+
+        @media (max-width: 600px) {
+            .item-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            nav button { padding: 1rem; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Preeti's Life Dashboard</h1>
+        <p class="subtitle">RIE Mysore | SS Properties | Learn with Preeti | Research</p>
+    </header>
+
+    <nav>
+        <button class="nav-btn active" onclick="switchPage('daily')">Daily Tracker</button>
+        <button class="nav-btn" onclick="switchPage('weekly')">Weekly Objectives</button>
+        <button class="nav-btn" onclick="switchPage('monthly')">Monthly Milestones</button>
+    </nav>
+
+    <div class="container">
+        
+        <div id="daily" class="page active">
+            <div class="progress-section">
+                <h2>Today's General Completion</h2>
+                <div class="progress-container">
+                    <div id="daily-bar" class="progress-bar">0%</div>
+                </div>
+            </div>
+
+            <div class="timetable-card">
+                <div class="card-header">Morning & Academic Execution</div>
+                <div class="item-row" data-type="daily">
+                    <span class="time-box">05:00 - 06:00</span>
+                    <span class="task-text">Wake up, Personal Care & Update Learn with Preeti WhatsApp Channel</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+                <div class="item-row" data-type="daily">
+                    <span class="time-box">06:00 - 07:15</span>
+                    <span class="task-text">Write Records (Botany/Chem/Zoo) / Assignments (AFL Book Analysis)</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+                <div class="item-row" data-type="daily">
+                    <span class="time-box">07:15 - 08:30</span>
+                    <span class="task-text">Bath, Wash Plates/Clothes, Have Breakfast</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+                <div class="item-row" data-type="daily">
+                    <span class="time-box">08:30 - 09:00</span>
+                    <span class="task-text">Brother's Admission Portal Sync (NCERT/CUET ranks/Admit Cards)</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+                <div class="item-row" data-type="daily">
+                    <span class="time-box">09:00 - 17:30</span>
+                    <span class="task-text">Attend RIE Mysore Lectures & Actively Take Core Notes</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+            </div>
+
+            <div class="timetable-card">
+                <div class="card-header">Corporate & Brand Operations</div>
+                <div class="item-row" data-type="daily">
+                    <span class="time-box">Free Windows</span>
+                    <span class="task-text">Post Land/Estate Plots to Real Estate Groups (SS Properties)</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+                <div class="item-row" data-type="daily">
+                    <span class="time-box">17:30 - 18:00</span>
+                    <span class="task-text">Submit SS Properties Work Google Form & Upload Screenshot</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+                <div class="item-row" data-type="daily">
+                    <span class="time-box">18:00 - 19:00</span>
+                    <span class="task-text">Social Connection Time (Family, Sister, and Friends)</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+                <div class="item-row" data-type="daily">
+                    <span class="time-box">19:00 - 20:30</span>
+                    <span class="task-text">Dynamic Segment: Teach/Record Content OR Zoology Research Work</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+            </div>
+
+            <div class="timetable-card">
+                <div class="card-header">Hostel Governance & Evening Wrap</div>
+                <div class="item-row" data-type="daily">
+                    <span class="time-box">20:30 - 21:00</span>
+                    <span class="task-text">Narmada Hostel Attendance, Leave Forms & Mess Representative Duties</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+                <div class="item-row" data-type="daily">
+                    <span class="time-box">21:00 - 22:00</span>
+                    <span class="task-text">Dinner, Wash Plates & Final Blueprint Verification for Brother</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="weekly" class="page">
+            <div class="progress-section">
+                <h2>Weekly Targets Accomplished</h2>
+                <div class="progress-container">
+                    <div id="weekly-bar" class="progress-bar">0%</div>
+                </div>
+            </div>
+
+            <div class="timetable-card">
+                <div class="card-header">Learn With Preeti Digital Growth</div>
+                <div class="item-row" data-type="weekly">
+                    <span class="time-box">Content [3-4 Posts]</span>
+                    <span class="task-text">Upload Educational Explanations / Notes on Instagram Feed</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+                <div class="item-row" data-type="weekly">
+                    <span class="time-box">YouTube Videos</span>
+                    <span class="task-text">Produce and publish 2-3 High-Value Conceptual Videos</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+            </div>
+
+            <div class="timetable-card">
+                <div class="card-header">Academic Research & Hostel Obligations</div>
+                <div class="item-row" data-type="weekly">
+                    <span class="time-box">Research Tier 1</span>
+                    <span class="task-text">Zoology Research: Study Evolution/Pregnancy metrics for Oxford build</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+                <div class="item-row" data-type="weekly">
+                    <span class="time-box">Research Tier 2</span>
+                    <span class="task-text">Theory Design: Analyze & map alternate Poikilotherm mechanics</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+                <div class="item-row" data-type="weekly">
+                    <span class="time-box">Mess Duty</span>
+                    <span class="task-text">Sunday Food Serving & Wing Distribution Logistics</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="monthly" class="page">
+            <div class="progress-section">
+                <h2>Monthly Macro Progress</h2>
+                <div class="progress-container">
+                    <div id="monthly-bar" class="progress-bar">0%</div>
+                </div>
+            </div>
+
+            <div class="timetable-card">
+                <div class="card-header">Academic Curriculum Milestones</div>
+                <div class="item-row" data-type="monthly">
+                    <span class="time-box">Syllabus Check</span>
+                    <span class="task-text">Complete 4 Units across all 6 Core Papers (Botany, Chem, Zoo, AFL, POP, POB)</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+                <div class="item-row" data-type="monthly">
+                    <span class="time-box">Book Analysis</span>
+                    <span class="task-text">Finalize Chapter Reviews for 7th Class Science Book (POP & POB Assignments)</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+                <div class="item-row" data-type="monthly">
+                    <span class="time-box">Lesson Planning</span>
+                    <span class="task-text">Draft and submit structured Lesson Plans for Physical & Biological Science</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+            </div>
+
+            <div class="timetable-card">
+                <div class="card-header">Strategic Objectives</div>
+                <div class="item-row" data-type="monthly">
+                    <span class="time-box">Hostel Cycle</span>
+                    <span class="task-text">Execute Day 15 & Day 30 Food Serving Roles perfectly with Warden Signatures</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+                <div class="item-row" data-type="monthly">
+                    <span class="time-box">Resume Engineering</span>
+                    <span class="task-text">Incorporate Research Draft elements and review current CGPA progress path</span>
+                    <div class="checkbox-group"><button class="status-btn" onclick="toggleStatus(this)">✓</button></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(pageId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        function toggleStatus(button) {
+            button.classList.toggle('done');
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const types = ['daily', 'weekly', 'monthly'];
+            
+            types.forEach(type => {
+                const totalRows = document.querySelectorAll(`.item-row[data-type="${type}"]`).length;
+                const completedRows = document.querySelectorAll(`.item-row[data-type="${type}"] .status-btn.done`).length;
+                
+                const percentage = totalRows > 0 ? Math.round((completedRows / totalRows) * 100) : 0;
+                
+                const bar = document.getElementById(`${type}-bar`);
+                bar.style.width = percentage + '%';
+                bar.innerText = percentage + '%';
+            });
+        }
+    </script>
+</body>
+</html>
