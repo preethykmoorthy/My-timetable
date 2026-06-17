@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preeti's Autonomous Life Dashboard</title>
+    <title>Preeti's Life Dashboard</title>
     <style>
         :root {
             --primary: #22013A;
@@ -49,7 +49,6 @@
         .page { display: none; }
         .page.active { display: block; }
 
-        /* Advanced Split Progress Bar Layout */
         .progress-section {
             background: var(--card-bg); padding: 1.5rem; border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 2rem;
@@ -68,7 +67,6 @@
         .split-segment.good { background: var(--success); }
         .split-segment.bad { background: var(--danger); }
 
-        /* Categorized Consistency Grid */
         .consistency-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem; }
         .category-block { background: #F8F9FA; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary); }
         .category-title { font-weight: bold; font-size: 0.85rem; color: #545454; text-transform: uppercase; margin-bottom: 0.4rem; }
@@ -78,7 +76,6 @@
         .mini-seg.good { background: var(--success); }
         .mini-seg.bad { background: var(--danger); }
 
-        /* Content Cards */
         .timetable-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 1.5rem; overflow: hidden; }
         .card-header { background: var(--primary); color: white; padding: 1rem; font-weight: bold; }
 
@@ -86,7 +83,6 @@
         .time-box { font-weight: bold; color: var(--secondary); min-width: 130px; }
         .task-text { flex-grow: 1; margin-right: 1rem; font-size: 0.95rem; }
 
-        /* Interactive Cycle Buttons */
         .status-cycle-btn {
             border: 2px solid #ccc; background: #fff; color: #777;
             border-radius: 50%; width: 40px; height: 40px;
@@ -132,51 +128,51 @@
 
             <div class="timetable-card">
                 <div class="card-header">Academic Duty Blocks</div>
-                <div class="item-row" data-id="whatsapp_brand" data-cat="content">
+                <div class="item-row" data-type="daily" data-id="whatsapp_brand" data-cat="content">
                     <span class="time-box">05:00 - 06:00</span>
-                    <span class="task-text">Wake up & Upload Learn with Preeti WhatsApp Channel Morning Update</span>
+                    <span class="task-text">Wake up &amp; Upload Learn with Preeti WhatsApp Channel Morning Update</span>
                     <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
                 </div>
-                <div class="item-row" data-id="records_homework" data-cat="acad">
+                <div class="item-row" data-type="daily" data-id="records_homework" data-cat="acad">
                     <span class="time-box">06:00 - 07:15</span>
-                    <span class="task-text">Write Records (Botany/Chem/Zoo Lab) & Complete Homework Tasks</span>
+                    <span class="task-text">Write Records (Botany/Chem/Zoo Lab) &amp; Complete Homework Tasks</span>
                     <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
                 </div>
-                <div class="item-row" data-id="personal_maint" data-cat="maint">
+                <div class="item-row" data-type="daily" data-id="personal_maint" data-cat="maint">
                     <span class="time-box">07:15 - 08:30</span>
-                    <span class="task-text">Take Bath, Plate Washing, Wardrobe Maintenance & Breakfast</span>
+                    <span class="task-text">Take Bath, Plate Washing, Wardrobe Maintenance &amp; Breakfast</span>
                     <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
                 </div>
-                <div class="item-row" data-id="brother_sync" data-cat="family">
+                <div class="item-row" data-type="daily" data-id="brother_sync" data-cat="family">
                     <span class="time-box">08:30 - 09:00</span>
-                    <span class="task-text">Check Brother's College Admission Portals, Merit Lists & Ranks</span>
+                    <span class="task-text">Check Brother's College Admission Portals, Merit Lists &amp; Ranks</span>
                     <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
                 </div>
-                <div class="item-row" data-id="rie_lectures" data-cat="acad">
+                <div class="item-row" data-type="daily" data-id="rie_lectures" data-cat="acad">
                     <span class="time-box">09:00 - 17:30</span>
-                    <span class="task-text">Attend RIE Mysore Classes & Complete Systematic Notebook Entry</span>
+                    <span class="task-text">Attend RIE Mysore Classes &amp; Complete Systematic Notebook Entry</span>
                     <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
                 </div>
             </div>
 
             <div class="timetable-card">
-                <div class="card-header">Corporate Operations & Content Strategy</div>
-                <div class="item-row" data-id="ss_prop_post" data-cat="corp">
+                <div class="card-header">Corporate Operations &amp; Content Strategy</div>
+                <div class="item-row" data-type="daily" data-id="ss_prop_post" data-cat="corp">
                     <span class="time-box">Free Windows</span>
                     <span class="task-text">Post Available Plots/Buildings to Targeted Facebook Groups</span>
                     <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
                 </div>
-                <div class="item-row" data-id="ss_prop_form" data-cat="corp">
+                <div class="item-row" data-type="daily" data-id="ss_prop_form" data-cat="corp">
                     <span class="time-box">17:30 - 18:00</span>
-                    <span class="task-text">Submit SS Properties Leads Google Form & Report Screenshot</span>
+                    <span class="task-text">Submit SS Properties Leads Google Form &amp; Report Screenshot</span>
                     <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
                 </div>
-                <div class="item-row" data-id="social_decomp" data-cat="family">
+                <div class="item-row" data-type="daily" data-id="social_decomp" data-cat="family">
                     <span class="time-box">18:00 - 19:00</span>
                     <span class="task-text">Connect and spend value time with Sister, Parents, and Friends</span>
                     <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
                 </div>
-                <div class="item-row" data-id="videos_research" data-cat="research">
+                <div class="item-row" data-type="daily" data-id="videos_research" data-cat="research">
                     <span class="time-box">19:00 - 20:30</span>
                     <span class="task-text">Record Learn with Preeti Videos OR Zoology Research Analytics</span>
                     <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
@@ -184,15 +180,15 @@
             </div>
 
             <div class="timetable-card">
-                <div class="card-header">Hostel Administration & Lock-Up</div>
-                <div class="item-row" data-id="hostel_duties" data-cat="hostel">
+                <div class="card-header">Hostel Administration &amp; Lock-Up</div>
+                <div class="item-row" data-type="daily" data-id="hostel_duties" data-cat="hostel">
                     <span class="time-box">20:30 - 21:00</span>
-                    <span class="task-text">Narmada Hostel Wing 2 Attendance, Leave Processing & Mess Notices</span>
+                    <span class="task-text">Narmada Hostel Wing 2 Attendance, Leave Processing &amp; Mess Notices</span>
                     <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
                 </div>
-                <div class="item-row" data-id="dinner_close" data-cat="maint">
+                <div class="item-row" data-type="daily" data-id="dinner_close" data-cat="maint">
                     <span class="time-box">21:00 - 22:00</span>
-                    <span class="task-text">Dinner Execution, Personal Plate Clean up & Next Day Plan Lock</span>
+                    <span class="task-text">Dinner Execution, Personal Plate Clean up &amp; Next Day Plan Lock</span>
                     <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
                 </div>
             </div>
@@ -223,7 +219,7 @@
                         </div>
                     </div>
                     <div class="category-block">
-                        <div class="category-title">Brand & Research Velocity</div>
+                        <div class="category-title">Brand &amp; Research Velocity</div>
                         <div class="mini-bar-wrapper">
                             <div id="week-research-g" class="mini-seg good" style="width: 0%"></div>
                             <div id="week-research-b" class="mini-seg bad" style="width: 0%"></div>
@@ -266,7 +262,7 @@
                         </div>
                     </div>
                     <div class="category-block">
-                        <div class="category-title">Research & Brand Evolution</div>
+                        <div class="category-title">Research &amp; Brand Evolution</div>
                         <div class="mini-bar-wrapper">
                             <div id="month-research-g" class="mini-seg good" style="width: 0%"></div>
                             <div id="month-research-b" class="mini-seg bad" style="width: 0%"></div>
@@ -340,8 +336,6 @@
 
         // ================= ANALYTICS CONTEXT ENGINE =================
         function processAnalytics() {
-            const todayKey = getTodayKey();
-            
             // 1. Calculate Daily Split Bar
             const dailyRows = document.querySelectorAll('.item-row[data-type="daily"]');
             let dailyDone = 0, dailyMissed = 0, dailyTotal = dailyRows.length;
@@ -386,7 +380,7 @@
             for (let i = 0; i < daysCount; i++) {
                 const checkDate = new Date(now);
                 checkDate.setDate(now.getDate() - i);
-                const dateString = `${checkDate.getFullYear Khoa}-${String(checkDate.getMonth()+1).padStart(2,'0')}-${String(checkDate.getDate()).padStart(2,'0')}`;
+                const dateString = `${checkDate.getFullYear()}-${String(checkDate.getMonth()+1).padStart(2,'0')}-${String(checkDate.getDate()).padStart(2,'0')}`;
                 
                 // Read from memory mapping
                 const dayData = db[dateString] || {};
@@ -395,6 +389,9 @@
                     const taskId = row.getAttribute('data-id');
                     const cat = row.getAttribute('data-cat');
                     const status = dayData[taskId] || 'pending';
+
+                    // Exclude content and maintenance from total macro stats to align on core targets
+                    if(cat === 'content' || cat === 'maint' || cat === 'family') return;
 
                     totalPossibleEntries++;
                     if (status === 'done') totalDone++;
@@ -413,9 +410,9 @@
             const badPct = totalPossibleEntries > 0 ? Math.round((totalMissed / totalPossibleEntries) * 100) : 0;
 
             document.getElementById(`${prefix}-good-bar`).style.width = goodPct + '%';
-            document.getElementById(`${prefix}-good-bar`).innerText = goodPct > 0 ? `${goodPct}% Completed` : '';
+            document.getElementById(`${prefix}-good-bar`).innerText = goodPct > 0 ? `${goodPct}% ✓` : '';
             document.getElementById(`${prefix}-bad-bar`).style.width = badPct + '%';
-            document.getElementById(`${prefix}-bad-bar`).innerText = badPct > 0 ? `${badPct}% Missed` : '';
+            document.getElementById(`${prefix}-bad-bar`).innerText = badPct > 0 ? `${badPct}% ✗` : '';
 
             // Update mini category bars if available on page
             Object.keys(catMetrics).forEach(cat => {
