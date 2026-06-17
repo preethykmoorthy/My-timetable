@@ -3,312 +3,275 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preeti's Life Consistency Dashboard</title>
+    <title>Preeti's Autonomous Life Dashboard</title>
     <style>
         :root {
-            --primary: #22013A; /* Deep Mysore Purple */
-            --secondary: #D40056; /* Energetic Magenta */
+            --primary: #22013A;
+            --secondary: #D40056;
             --bg: #F0F4F8;
             --card-bg: #ffffff;
             --text: #1A1A1A;
-            --success: #00B16A; /* Fresh Green */
-            --danger: #FF3B30; /* Bright Red */
-            --pending: #A0A0A0; /* Mid Grey */
+            --success: #00B16A;
+            --danger: #FF3B30;
+            --pending: #E0E0E0;
         }
 
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
         }
 
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 2rem 1rem;
-            text-align: center;
+            color: white; padding: 2rem 1rem; text-align: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         h1 { margin: 0; font-size: 2.2rem; }
-        .header-meta { margin-top: 0.5rem; opacity: 0.9; font-size: 1rem; }
-        #live-timestamp { font-weight: bold; color: #FFF; margin-top: 0.2rem; font-size: 1.1rem;}
+        .header-meta { margin-top: 0.3rem; opacity: 0.9; }
+        #live-timestamp { font-weight: bold; margin-top: 0.5rem; font-size: 1.2rem; background: rgba(0,0,0,0.2); display: inline-block; padding: 0.3rem 1rem; border-radius: 20px;}
 
         nav {
-            display: flex;
-            justify-content: center;
-            background: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            position: sticky; top: 0; z-index: 100;
+            display: flex; justify-content: center; background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
         }
 
         nav button {
-            background: none; border: none;
-            padding: 1rem; font-weight: 600;
+            background: none; border: none; padding: 1rem 1.5rem; font-weight: 600;
             color: #555; cursor: pointer; transition: all 0.3s;
         }
 
         nav button.active { color: var(--secondary); border-bottom: 3px solid var(--secondary); }
 
-        .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; padding-bottom: 3rem;}
-
+        .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem 4rem 1rem; }
         .page { display: none; }
         .page.active { display: block; }
 
-        /* General Progress Styles */
+        /* Advanced Split Progress Bar Layout */
         .progress-section {
-            background: var(--card-bg);
-            padding: 1.5rem; border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 2rem;
+            background: var(--card-bg); padding: 1.5rem; border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 2rem;
         }
 
-        .master-bar-container { background: #E0E0E0; border-radius: 20px; height: 28px; width: 100%; overflow: hidden; margin-top: 0.5rem; }
-        .master-bar { background: linear-gradient(90deg, var(--success), #28A745); height: 100%; width: 0%; transition: width 0.4s ease; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.95rem; }
+        .split-bar-container {
+            display: flex; background: var(--pending); border-radius: 20px;
+            height: 30px; width: 100%; overflow: hidden; margin-top: 0.8rem; position: relative;
+        }
 
-        /* Categorized Consistency Progress Bars */
-        .consistency-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem; }
-        .category-block { background: #F8F9FA; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary); }
-        .category-title { font-weight: bold; font-size: 0.9rem; color: #444; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.3rem;}
-        .mini-bar-container { background: #DDD; border-radius: 10px; height: 18px; width: 100%; overflow: hidden; }
-        .mini-bar { height: 100%; transition: width 0.3s; font-size: 0.8rem; color: white; font-weight: bold; text-align: center; line-height: 18px; }
-
-        /* Timetable Cards */
-        .timetable-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 1.5rem; overflow: hidden; }
-        .card-header { background: var(--primary); color: white; padding: 1rem; font-weight: bold; font-size: 1.1rem; }
-
-        .item-row { display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid #EEE; transition: background 0.2s; }
-        .item-row:last-child { border-bottom: none; }
-        .item-row:hover { background-color: #FDF9FD; }
-
-        .time-box { font-weight: bold; color: var(--secondary); min-width: 140px; font-size: 0.95rem;}
-        .task-text { flex-grow: 1; margin-right: 1rem; font-size: 0.95rem; line-height: 1.4; }
-
-        /* Checkbox-Cycle Button */
-        .status-cycle-btn {
-            border: 2px solid #ccc;
-            background: #fff;
-            color: #AAA;
-            border-radius: 50%;
-            width: 38px; height: 38px;
-            cursor: pointer;
-            font-weight: bold; font-size: 1.2rem;
-            transition: all 0.2s;
+        .split-segment {
+            height: 100%; transition: width 0.5s ease;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            color: white; font-weight: bold; font-size: 0.9rem;
+        }
+        .split-segment.good { background: var(--success); }
+        .split-segment.bad { background: var(--danger); }
+
+        /* Categorized Consistency Grid */
+        .consistency-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .category-block { background: #F8F9FA; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--primary); }
+        .category-title { font-weight: bold; font-size: 0.85rem; color: #545454; text-transform: uppercase; margin-bottom: 0.4rem; }
+        
+        .mini-bar-wrapper { display: flex; height: 18px; background: #DDD; border-radius: 10px; overflow: hidden; }
+        .mini-seg { height: 100%; transition: width 0.3s; font-size: 0.75rem; color: white; font-weight: bold; text-align: center; line-height: 18px; }
+        .mini-seg.good { background: var(--success); }
+        .mini-seg.bad { background: var(--danger); }
+
+        /* Content Cards */
+        .timetable-card { background: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 1.5rem; overflow: hidden; }
+        .card-header { background: var(--primary); color: white; padding: 1rem; font-weight: bold; }
+
+        .item-row { display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid #EEE; }
+        .time-box { font-weight: bold; color: var(--secondary); min-width: 130px; }
+        .task-text { flex-grow: 1; margin-right: 1rem; font-size: 0.95rem; }
+
+        /* Interactive Cycle Buttons */
+        .status-cycle-btn {
+            border: 2px solid #ccc; background: #fff; color: #777;
+            border-radius: 50%; width: 40px; height: 40px;
+            cursor: pointer; font-weight: bold; font-size: 1.1rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        .status-cycle-btn[data-status="pending"] { color: #BBB; border-color: #DDD; }
+        .status-cycle-btn[data-status="pending"] { background: #FFF; color: #CCC; }
         .status-cycle-btn[data-status="done"] { background: var(--success); color: white; border-color: var(--success); }
         .status-cycle-btn[data-status="missed"] { background: var(--danger); color: white; border-color: var(--danger); }
 
         @media (max-width: 600px) {
             .item-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
             .time-box { min-width: auto; }
-            .consistency-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Preeti's Life Tracker</h1>
-        <div class="header-meta">RIE Mysore | SS Properties | Learn with Preeti</div>
-        <div id="live-timestamp">Loading current time...</div>
+        <h1>Preeti's Life Dashboard</h1>
+        <div class="header-meta">RIE Mysore Core Scheduling & Verification Sync</div>
+        <div id="live-timestamp">Setting current date...</div>
     </header>
 
     <nav>
         <button class="nav-btn active" onclick="switchPage('daily')">Daily Tracker</button>
-        <button class="nav-btn" onclick="switchPage('weekly')">Weekly Consistency</button>
-        <button class="nav-btn" onclick="switchPage('monthly')">Monthly Milestones</button>
+        <button class="nav-btn" onclick="switchPage('weekly')">7-Day Consistency</button>
+        <button class="nav-btn" onclick="switchPage('monthly')">30-Day Evaluation</button>
     </nav>
 
     <div class="container">
         
         <div id="daily" class="page active">
             <div class="progress-section">
-                <h2>Today's General Completion</h2>
-                <div class="master-bar-container">
-                    <div id="daily-bar" class="master-bar">0%</div>
+                <h2 id="tracker-date-heading">Today's Progress Profile</h2>
+                <div class="split-bar-container">
+                    <div id="daily-good-bar" class="split-segment good" style="width: 0%;">0%</div>
+                    <div id="daily-bad-bar" class="split-segment bad" style="width: 0%;">0%</div>
                 </div>
             </div>
 
             <div class="timetable-card">
-                <div class="card-header">Morning & Academic Execution</div>
-                <div class="item-row" data-type="daily">
+                <div class="card-header">Academic Duty Blocks</div>
+                <div class="item-row" data-id="whatsapp_brand" data-cat="content">
                     <span class="time-box">05:00 - 06:00</span>
-                    <span class="task-text">Wake up, Personal Care & Update Learn with Preeti WhatsApp Channel</span>
-                    <button class="status-cycle-btn" data-status="pending" onclick="cycleStatus(this)">?</button>
+                    <span class="task-text">Wake up & Upload Learn with Preeti WhatsApp Channel Morning Update</span>
+                    <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
                 </div>
-                <div class="item-row" data-type="daily">
+                <div class="item-row" data-id="records_homework" data-cat="acad">
                     <span class="time-box">06:00 - 07:15</span>
-                    <span class="task-text">Write Records (Botany/Chem/Zoo) / Assignments (AFL Book Analysis)</span>
-                    <button class="status-cycle-btn" data-status="pending" onclick="cycleStatus(this)">?</button>
+                    <span class="task-text">Write Records (Botany/Chem/Zoo Lab) & Complete Homework Tasks</span>
+                    <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
                 </div>
-                <div class="item-row" data-type="daily">
+                <div class="item-row" data-id="personal_maint" data-cat="maint">
                     <span class="time-box">07:15 - 08:30</span>
-                    <span class="task-text">Bath, Wash Plates/Clothes, Have Breakfast</span>
-                    <button class="status-cycle-btn" data-status="pending" onclick="cycleStatus(this)">?</button>
+                    <span class="task-text">Take Bath, Plate Washing, Wardrobe Maintenance & Breakfast</span>
+                    <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
                 </div>
-                <div class="item-row" data-type="daily">
+                <div class="item-row" data-id="brother_sync" data-cat="family">
                     <span class="time-box">08:30 - 09:00</span>
-                    <span class="task-text">Brother's Admission Portal Sync (NCERT/CUET ranks/Admit Cards)</span>
-                    <button class="status-cycle-btn" data-status="pending" onclick="cycleStatus(this)">?</button>
+                    <span class="task-text">Check Brother's College Admission Portals, Merit Lists & Ranks</span>
+                    <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
                 </div>
-                <div class="item-row" data-type="daily">
+                <div class="item-row" data-id="rie_lectures" data-cat="acad">
                     <span class="time-box">09:00 - 17:30</span>
-                    <span class="task-text">Attend RIE Mysore Lectures & Actively Take Core Notes</span>
-                    <button class="status-cycle-btn" data-status="pending" onclick="cycleStatus(this)">?</button>
+                    <span class="task-text">Attend RIE Mysore Classes & Complete Systematic Notebook Entry</span>
+                    <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
                 </div>
             </div>
 
             <div class="timetable-card">
-                <div class="card-header">Corporate & Brand Operations</div>
-                <div class="item-row" data-type="daily">
+                <div class="card-header">Corporate Operations & Content Strategy</div>
+                <div class="item-row" data-id="ss_prop_post" data-cat="corp">
                     <span class="time-box">Free Windows</span>
-                    <span class="task-text">Post Land/Estate Plots to Real Estate Groups (SS Properties)</span>
-                    <button class="status-cycle-btn" data-status="pending" onclick="cycleStatus(this)">?</button>
+                    <span class="task-text">Post Available Plots/Buildings to Targeted Facebook Groups</span>
+                    <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
                 </div>
-                <div class="item-row" data-type="daily">
+                <div class="item-row" data-id="ss_prop_form" data-cat="corp">
                     <span class="time-box">17:30 - 18:00</span>
-                    <span class="task-text">Submit SS Properties Work Google Form & Upload Screenshot</span>
-                    <button class="status-cycle-btn" data-status="pending" onclick="cycleStatus(this)">?</button>
+                    <span class="task-text">Submit SS Properties Leads Google Form & Report Screenshot</span>
+                    <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
                 </div>
-                <div class="item-row" data-type="daily">
+                <div class="item-row" data-id="social_decomp" data-cat="family">
                     <span class="time-box">18:00 - 19:00</span>
-                    <span class="task-text">Social Connection Time (Family, Sister, and Friends)</span>
-                    <button class="status-cycle-btn" data-status="pending" onclick="cycleStatus(this)">?</button>
+                    <span class="task-text">Connect and spend value time with Sister, Parents, and Friends</span>
+                    <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
+                </div>
+                <div class="item-row" data-id="videos_research" data-cat="research">
+                    <span class="time-box">19:00 - 20:30</span>
+                    <span class="task-text">Record Learn with Preeti Videos OR Zoology Research Analytics</span>
+                    <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
                 </div>
             </div>
 
             <div class="timetable-card">
-                <div class="card-header">Hostel Governance & Evening Wrap</div>
-                <div class="item-row" data-type="daily">
-                    <span class="time-box">19:00 - 20:30</span>
-                    <span class="task-text">Dynamic Segment: Teach/Record Content OR Zoology Research Work</span>
-                    <button class="status-cycle-btn" data-status="pending" onclick="cycleStatus(this)">?</button>
-                </div>
-                <div class="item-row" data-type="daily">
+                <div class="card-header">Hostel Administration & Lock-Up</div>
+                <div class="item-row" data-id="hostel_duties" data-cat="hostel">
                     <span class="time-box">20:30 - 21:00</span>
-                    <span class="task-text">Narmada Hostel Attendance, Leave Forms & Mess Representative Duties</span>
-                    <button class="status-cycle-btn" data-status="pending" onclick="cycleStatus(this)">?</button>
+                    <span class="task-text">Narmada Hostel Wing 2 Attendance, Leave Processing & Mess Notices</span>
+                    <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
+                </div>
+                <div class="item-row" data-id="dinner_close" data-cat="maint">
+                    <span class="time-box">21:00 - 22:00</span>
+                    <span class="task-text">Dinner Execution, Personal Plate Clean up & Next Day Plan Lock</span>
+                    <button class="status-cycle-btn" data-status="pending" onclick="handleCycle(this)">?</button>
                 </div>
             </div>
         </div>
 
         <div id="weekly" class="page">
             <div class="progress-section">
-                <h2>Weekly Overall Progress</h2>
-                <div class="master-bar-container">
-                    <div id="weekly-bar" class="master-bar">0%</div>
+                <h2>7-Day Macro Performance</h2>
+                <div class="split-bar-container">
+                    <div id="week-good-bar" class="split-segment good" style="width: 0%;">0%</div>
+                    <div id="week-bad-bar" class="split-segment bad" style="width: 0%;">0%</div>
                 </div>
 
-                <h3 style="margin-top: 1.5rem; border-top: 1px solid #EEE; padding-top: 1rem;">Activity Consistency Bars</h3>
+                <h3 style="margin-top: 1.5rem;">Automated Trend Analysis by Category (Last 7 Days)</h3>
                 <div class="consistency-grid">
                     <div class="category-block">
-                        <div class="category-title">Academics (Classes, Notes, Records)</div>
-                        <div class="mini-bar-container"><div id="week-acad-bar" class="mini-bar" style="background:#007BFF; width:0%">0/0</div></div>
+                        <div class="category-title">Academics (Lectures/Records)</div>
+                        <div class="mini-bar-wrapper">
+                            <div id="week-acad-g" class="mini-seg good" style="width: 0%"></div>
+                            <div id="week-acad-b" class="mini-seg bad" style="width: 0%"></div>
+                        </div>
                     </div>
                     <div class="category-block">
-                        <div class="category-title">Content Creation (Insta, YT, WA)</div>
-                        <div class="mini-bar-container"><div id="week-content-bar" class="mini-bar" style="background:#E01E5A; width:0%">0/0</div></div>
+                        <div class="category-title">Corporate Production (SS Properties)</div>
+                        <div class="mini-bar-wrapper">
+                            <div id="week-corp-g" class="mini-seg good" style="width: 0%"></div>
+                            <div id="week-corp-b" class="mini-seg bad" style="width: 0%"></div>
+                        </div>
                     </div>
                     <div class="category-block">
-                        <div class="category-title">Zoology Research & Oxford Build</div>
-                        <div class="mini-bar-container"><div id="week-research-bar" class="mini-bar" style="background:#6F42C1; width:0%">0/0</div></div>
+                        <div class="category-title">Brand & Research Velocity</div>
+                        <div class="mini-bar-wrapper">
+                            <div id="week-research-g" class="mini-seg good" style="width: 0%"></div>
+                            <div id="week-research-b" class="mini-seg bad" style="width: 0%"></div>
+                        </div>
                     </div>
                     <div class="category-block">
-                        <div class="category-title">Hostel & Admin Obligations</div>
-                        <div class="mini-bar-container"><div id="week-admin-bar" class="mini-bar" style="background:#FFC107; width:0%; color:#333">0/0</div></div>
+                        <div class="category-title">Hostel Leadership Operations</div>
+                        <div class="mini-bar-wrapper">
+                            <div id="week-hostel-g" class="mini-seg good" style="width: 0%"></div>
+                            <div id="week-hostel-b" class="mini-seg bad" style="width: 0%"></div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div class="timetable-card">
-                <div class="card-header">Weekly Content Schedule</div>
-                <div class="item-row" data-type="weekly" data-cat="content">
-                    <span class="time-box">Content Batch [3-4]</span>
-                    <span class="task-text">Schedule Educational Explanations / Notes on Instagram Feed</span>
-                    <button class="status-cycle-btn" data-status="pending" onclick="cycleStatus(this)">?</button>
-                </div>
-                <div class="item-row" data-type="weekly" data-cat="content">
-                    <span class="time-box">YT Videos [2-3]</span>
-                    <span class="task-text">Produce and publish High-Value Conceptual Videos for Channel</span>
-                    <button class="status-cycle-btn" data-status="pending" onclick="cycleStatus(this)">?</button>
-                </div>
-            </div>
-            
-            <div class="timetable-card">
-                <div class="card-header">Weekly Objectives & Obligations</div>
-                <div class="item-row" data-type="weekly" data-cat="research">
-                    <span class="time-box">Research Tier 1</span>
-                    <span class="task-text">Zoology Research: Study Evolution/Pregnancy metrics for resume</span>
-                    <button class="status-cycle-btn" data-status="pending" onclick="cycleStatus(this)">?</button>
-                </div>
-                <div class="item-row" data-type="weekly" data-cat="admin">
-                    <span class="time-box">Sunday Mess Rep</span>
-                    <span class="task-text">Food Serving Duty & Wing Distribution Logistics (Warden Check)</span>
-                    <button class="status-cycle-btn" data-status="pending" onclick="cycleStatus(this)">?</button>
-                </div>
-            </div>
+            <p style="text-align: center; color: #666; font-style: italic;">Note: This data updates itself completely using your daily tracking history logs.</p>
         </div>
 
         <div id="monthly" class="page">
             <div class="progress-section">
-                <h2>Monthly Macro Progress</h2>
-                <div class="master-bar-container">
-                    <div id="monthly-bar" class="master-bar">0%</div>
+                <h2>30-Day Macro Performance</h2>
+                <div class="split-bar-container">
+                    <div id="month-good-bar" class="split-segment good" style="width: 0%;">0%</div>
+                    <div id="month-bad-bar" class="split-segment bad" style="width: 0%;">0%</div>
                 </div>
 
-                <h3 style="margin-top: 1.5rem; border-top: 1px solid #EEE; padding-top: 1rem;">Monthly Consistency Bars</h3>
+                <h3 style="margin-top: 1.5rem;">Automated Trend Analysis by Category (Last 30 Days)</h3>
                 <div class="consistency-grid">
                     <div class="category-block">
-                        <div class="category-title">RIE Syllabus (Units 1-4 Complete)</div>
-                        <div class="mini-bar-container"><div id="month-syllabus-bar" class="mini-bar" style="background:#007BFF; width:0%">0/0</div></div>
+                        <div class="category-title">Academics Consistency</div>
+                        <div class="mini-bar-wrapper">
+                            <div id="month-acad-g" class="mini-seg good" style="width: 0%"></div>
+                            <div id="month-acad-b" class="mini-seg bad" style="width: 0%"></div>
+                        </div>
                     </div>
                     <div class="category-block">
-                        <div class="category-title">Assignments & Lesson Plans</div>
-                        <div class="mini-bar-container"><div id="month-assign-bar" class="mini-bar" style="background:#E01E5A; width:0%">0/0</div></div>
+                        <div class="category-title">Corporate Retention Rate</div>
+                        <div class="mini-bar-wrapper">
+                            <div id="month-corp-g" class="mini-seg good" style="width: 0%"></div>
+                            <div id="month-corp-b" class="mini-seg bad" style="width: 0%"></div>
+                        </div>
                     </div>
                     <div class="category-block">
-                        <div class="category-title">Strategic Goals (Hostel, Research Papers)</div>
-                        <div class="mini-bar-container"><div id="month-strat-bar" class="mini-bar" style="background:#FFC107; width:0%; color:#333">0/0</div></div>
+                        <div class="category-title">Research & Brand Evolution</div>
+                        <div class="mini-bar-wrapper">
+                            <div id="month-research-g" class="mini-seg good" style="width: 0%"></div>
+                            <div id="month-research-b" class="mini-seg bad" style="width: 0%"></div>
+                        </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="timetable-card">
-                <div class="card-header">Syllabus Milestones</div>
-                <div class="item-row" data-type="monthly" data-cat="syllabus">
-                    <span class="time-box">Units Check</span>
-                    <span class="task-text">Complete all 4 Units across Botany, Chem, Zoo Papers</span>
-                    <button class="status-cycle-btn" data-status="pending" onclick="cycleStatus(this)">?</button>
-                </div>
-                <div class="item-row" data-type="monthly" data-cat="syllabus">
-                    <span class="time-box">Pedagogy [4 Units]</span>
-                    <span class="task-text">Complete Units for AFL, POP, and POB Papers</span>
-                    <button class="status-cycle-btn" data-status="pending" onclick="cycleStatus(this)">?</button>
-                </div>
-            </div>
-
-            <div class="timetable-card">
-                <div class="card-header">Major Projects & Obligations</div>
-                <div class="item-row" data-type="monthly" data-cat="assign">
-                    <span class="time-box">Book Analysis</span>
-                    <span class="task-text">Finalize Chapter Reviews for 7th Class Science Book (Assignment)</span>
-                    <button class="status-cycle-btn" data-status="pending" onclick="cycleStatus(this)">?</button>
-                </div>
-                <div class="item-row" data-type="monthly" data-cat="assign">
-                    <span class="time-box">Lesson Plans [6,6]</span>
-                    <span class="task-text">Draft structured Plans for Physical & Biological Science Papers</span>
-                    <button class="status-cycle-btn" data-status="pending" onclick="cycleStatus(this)">?</button>
-                </div>
-                <div class="item-row" data-type="monthly" data-cat="strat">
-                    <span class="time-box">Admin Cycle</span>
-                    <span class="task-text">Execute Day 15 & Day 30 Mess Duties (Warden Signatures)</span>
-                    <button class="status-cycle-btn" data-status="pending" onclick="cycleStatus(this)">?</button>
                 </div>
             </div>
         </div>
@@ -316,17 +279,161 @@
     </div>
 
     <script>
-        // ================= DATE & TIME MANAGER =================
-        function updateDateTime() {
-            const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-            const formatted = now.toLocaleDateString('en-IN', options);
-            document.getElementById('live-timestamp').innerText = formatted;
-        }
-        updateDateTime();
-        setInterval(updateDateTime, 60000); // Update time every minute
+        // ================= DATABASE STRUCTURING =================
+        let db = JSON.parse(localStorage.getItem('preeti_dashboard_db')) || {};
 
-        // ================= PAGE NAVIGATION =================
+        function getTodayKey() {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        }
+
+        // ================= LIVE TIMESTAMPS =================
+        function initializeApp() {
+            const todayKey = getTodayKey();
+            const now = new Date();
+            
+            // Format for Headings
+            document.getElementById('live-timestamp').innerText = now.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+            document.getElementById('tracker-date-heading').innerText = `Progress Profile for ${now.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })} (Auto-Filled)`;
+
+            // Initialize database structure for today if empty
+            if (!db[todayKey]) {
+                db[todayKey] = {};
+            }
+
+            // Restore daily check states from memory
+            document.querySelectorAll('.item-row[data-id]').forEach(row => {
+                const taskId = row.getAttribute('data-id');
+                const savedStatus = db[todayKey][taskId] || 'pending';
+                const btn = row.querySelector('.status-cycle-btn');
+                
+                btn.setAttribute('data-status', savedStatus);
+                btn.innerText = savedStatus === 'done' ? '✓' : (savedStatus === 'missed' ? '✗' : '?');
+            });
+
+            processAnalytics();
+        }
+
+        // ================= CYCLE BUTTON CONTROLLER =================
+        function handleCycle(btn) {
+            const row = btn.closest('.item-row');
+            const taskId = row.getAttribute('data-id');
+            const currentStatus = btn.getAttribute('data-status');
+            const todayKey = getTodayKey();
+
+            let nextStatus, symbol;
+            if (currentStatus === 'pending') { nextStatus = 'done'; symbol = '✓'; }
+            else if (currentStatus === 'done') { nextStatus = 'missed'; symbol = '✗'; }
+            else { nextStatus = 'pending'; symbol = '?'; }
+
+            // Apply to view
+            btn.setAttribute('data-status', nextStatus);
+            btn.innerText = symbol;
+
+            // Commit to Database
+            db[todayKey][taskId] = nextStatus;
+            localStorage.setItem('preeti_dashboard_db', JSON.stringify(db));
+
+            // Instant recalculation across entire system
+            processAnalytics();
+        }
+
+        // ================= ANALYTICS CONTEXT ENGINE =================
+        function processAnalytics() {
+            const todayKey = getTodayKey();
+            
+            // 1. Calculate Daily Split Bar
+            const dailyRows = document.querySelectorAll('.item-row[data-type="daily"]');
+            let dailyDone = 0, dailyMissed = 0, dailyTotal = dailyRows.length;
+
+            dailyRows.forEach(row => {
+                const status = row.querySelector('.status-cycle-btn').getAttribute('data-status');
+                if (status === 'done') dailyDone++;
+                if (status === 'missed') dailyMissed++;
+            });
+
+            const dGoodPct = dailyTotal > 0 ? Math.round((dailyDone / dailyTotal) * 100) : 0;
+            const dBadPct = dailyTotal > 0 ? Math.round((dailyMissed / dailyTotal) * 100) : 0;
+
+            const dgBar = document.getElementById('daily-good-bar');
+            const dbBar = document.getElementById('daily-bad-bar');
+            
+            dgBar.style.width = dGoodPct + '%'; dgBar.innerText = dGoodPct > 0 ? `${dGoodPct}% ✓` : '';
+            dbBar.style.width = dBadPct + '%'; dbBar.innerText = dBadPct > 0 ? `${dBadPct}% ✗` : '';
+
+            // 2. Compute Historical Time Windows (7 and 30 Days)
+            calculateHistoricalMetrics(7, 'week');
+            calculateHistoricalMetrics(30, 'month');
+        }
+
+        function calculateHistoricalMetrics(daysCount, prefix) {
+            const taskElements = document.querySelectorAll('.item-row[data-type="daily"]');
+            let totalPossibleEntries = 0;
+            let totalDone = 0;
+            let totalMissed = 0;
+
+            // Structured Category Counts
+            let catMetrics = {
+                acad: { done: 0, missed: 0, total: 0 },
+                corp: { done: 0, missed: 0, total: 0 },
+                research: { done: 0, missed: 0, total: 0 },
+                hostel: { done: 0, missed: 0, total: 0 }
+            };
+
+            const now = new Date();
+
+            // Run iterations backward over the specified history range
+            for (let i = 0; i < daysCount; i++) {
+                const checkDate = new Date(now);
+                checkDate.setDate(now.getDate() - i);
+                const dateString = `${checkDate.getFullYear Khoa}-${String(checkDate.getMonth()+1).padStart(2,'0')}-${String(checkDate.getDate()).padStart(2,'0')}`;
+                
+                // Read from memory mapping
+                const dayData = db[dateString] || {};
+
+                taskElements.forEach(row => {
+                    const taskId = row.getAttribute('data-id');
+                    const cat = row.getAttribute('data-cat');
+                    const status = dayData[taskId] || 'pending';
+
+                    totalPossibleEntries++;
+                    if (status === 'done') totalDone++;
+                    if (status === 'missed') totalMissed++;
+
+                    if (catMetrics[cat]) {
+                        catMetrics[cat].total++;
+                        if (status === 'done') catMetrics[cat].done++;
+                        if (status === 'missed') catMetrics[cat].missed++;
+                    }
+                });
+            }
+
+            // Calculate overall historical bar width allocations
+            const goodPct = totalPossibleEntries > 0 ? Math.round((totalDone / totalPossibleEntries) * 100) : 0;
+            const badPct = totalPossibleEntries > 0 ? Math.round((totalMissed / totalPossibleEntries) * 100) : 0;
+
+            document.getElementById(`${prefix}-good-bar`).style.width = goodPct + '%';
+            document.getElementById(`${prefix}-good-bar`).innerText = goodPct > 0 ? `${goodPct}% Completed` : '';
+            document.getElementById(`${prefix}-bad-bar`).style.width = badPct + '%';
+            document.getElementById(`${prefix}-bad-bar`).innerText = badPct > 0 ? `${badPct}% Missed` : '';
+
+            // Update mini category bars if available on page
+            Object.keys(catMetrics).forEach(cat => {
+                const metric = catMetrics[cat];
+                const gBar = document.getElementById(`${prefix}-${cat}-g`);
+                const bBar = document.getElementById(`${prefix}-${cat}-b`);
+
+                if (gBar && bBar) {
+                    const cGoodPct = metric.total > 0 ? Math.round((metric.done / metric.total) * 100) : 0;
+                    const cBadPct = metric.total > 0 ? Math.round((metric.missed / metric.total) * 100) : 0;
+
+                    gBar.style.width = cGoodPct + '%'; gBar.innerText = cGoodPct > 15 ? `✓ ${cGoodPct}%` : '';
+                    bBar.style.width = cBadPct + '%'; bBar.innerText = cBadPct > 15 ? `✗ ${cBadPct}%` : '';
+                }
+            });
+        }
+
+        // ================= NAVIGATION SWITCHER =================
         function switchPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -334,75 +441,8 @@
             event.currentTarget.classList.add('active');
         }
 
-        // ================= STATUS CYCLE ENGINE =================
-        function cycleStatus(btn) {
-            const currentStatus = btn.getAttribute('data-status');
-            let nextStatus, text, percentageChange;
-
-            switch (currentStatus) {
-                case 'pending':
-                    nextStatus = 'done'; text = '✓';
-                    break;
-                case 'done':
-                    nextStatus = 'missed'; text = '✗';
-                    break;
-                case 'missed':
-                    nextStatus = 'pending'; text = '?';
-                    break;
-            }
-
-            btn.setAttribute('data-status', nextStatus);
-            btn.innerText = text;
-            updateAllProgressBars();
-        }
-
-        // ================= PROGRESS CALCULATION ENGINE =================
-        function updateAllProgressBars() {
-            const pageTypes = ['daily', 'weekly', 'monthly'];
-            
-            pageTypes.forEach(type => {
-                // 1. Calculate MASTER Bar for the Page
-                const totalRows = document.querySelectorAll(`.item-row[data-type="${type}"]`).length;
-                const doneRows = document.querySelectorAll(`.item-row[data-type="${type}"] .status-cycle-btn[data-status="done"]`).length;
-                
-                const overallPercentage = totalRows > 0 ? Math.round((doneRows / totalRows) * 100) : 0;
-                
-                const masterBar = document.getElementById(`${type}-bar`);
-                masterBar.style.width = overallPercentage + '%';
-                masterBar.innerText = overallPercentage + '%';
-
-                // 2. Calculate CATEGORIZED Consistency Bars (only for Weekly/Monthly)
-                if (type === 'weekly' || type === 'monthly') {
-                    // Find all unique categories on this page
-                    const rowsWithCat = document.querySelectorAll(`.item-row[data-type="${type}"][data-cat]`);
-                    const categories = [...new Set([...rowsWithCat].map(r => r.getAttribute('data-cat')))];
-
-                    categories.forEach(cat => {
-                        const catRows = document.querySelectorAll(`.item-row[data-type="${type}"][data-cat="${cat}"]`).length;
-                        const catDone = document.querySelectorAll(`.item-row[data-type="${type}"][data-cat="${cat}"] .status-cycle-btn[data-status="done"]`).length;
-                        
-                        const catPercentage = catRows > 0 ? Math.round((catDone / catRows) * 100) : 0;
-                        const miniBarId = `${type === 'weekly' ? 'week' : 'month'}-${cat}-bar`;
-                        const miniBar = document.getElementById(miniBarId);
-
-                        if (miniBar) {
-                            miniBar.style.width = catPercentage + '%';
-                            miniBar.innerText = `${catDone}/${catRows}`;
-                            
-                            // Visual Feedback: Turn red if consistency is low
-                            miniBar.style.background = catPercentage < 40 ? '#FF3B30' : 
-                                                      (catPercentage < 80 ? '#FFC107' : '#00B16A');
-                            if (catPercentage >= 40 && catPercentage < 80) miniBar.style.color = '#333';
-                            else miniBar.style.color = 'white';
-                        }
-                    });
-                }
-            });
-        }
-
-        // Initial Progress Calculation on Load
-        updateAllProgressBars();
-
+        // Core Initialization Launch
+        window.onload = initializeApp;
     </script>
 </body>
 </html>
